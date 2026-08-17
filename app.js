@@ -12,6 +12,7 @@ const skuInput = document.querySelector('#sku');
 const lotPartOneInput = document.querySelector('#lot-part-one');
 const lotPartTwoInput = document.querySelector('#lot-part-two');
 const postureInput = document.querySelector('#posture');
+const completeLotOutput = document.querySelector('#complete-lot');
 const errorOutput = document.querySelector('#form-error');
 const preview = document.querySelector('#preview-section');
 const qrContainer = document.querySelector('#qr-code');
@@ -127,6 +128,12 @@ function updateLabel() {
   const printedLot = calculatePrintedLot(lot, postureInput.value);
 
   completeLotOutput.textContent = completeLot || '—';
+
+  if (!sku || !lot || !date) {
+  preview.hidden = true;
+  errorOutput.textContent = '';
+  return;
+}
 
   const payload = `SKU=${sku};LOTE=${lot};POSTURA=${postureInput.value}`;
   errorOutput.textContent = '';
