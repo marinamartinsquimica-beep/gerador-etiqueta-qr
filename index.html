@@ -17,20 +17,23 @@
 <header class="topbar">
   <div class="topbar-inner">
     <h1>GERADOR DE ETIQUETA QR</h1>
-    <span>v<span id="app-version">1.0.7</span></span>
+    <span>v<span id="app-version">1.0.8</span></span>
   </div>
 </header>
 
 <main class="app-shell">
 
-  <!-- DADOS -->
+  <!-- DADOS DO PALETE -->
   <section class="form-card">
 
     <h2>DADOS DO PALETE</h2>
 
     <form id="label-form" novalidate>
 
-      <label for="sku">SKU</label>
+      <!-- SKU -->
+      <label for="sku">
+        SKU
+      </label>
 
       <input
         id="sku"
@@ -41,6 +44,8 @@
         required
       >
 
+
+      <!-- LOTE -->
       <label>
         LOTE
         <span>(digite apenas os números)</span>
@@ -76,6 +81,7 @@
       </p>
 
 
+      <!-- DATA DE POSTURA -->
       <label for="posture">
         DATA DE POSTURA
       </label>
@@ -92,6 +98,7 @@
       </p>
 
 
+      <!-- LOTE COMPLETO -->
       <label>
         LOTE COMPLETO
         <span>(gerado automaticamente)</span>
@@ -101,6 +108,30 @@
         <output id="complete-lot">—</output>
       </div>
 
+
+      <!-- QUANTIDADE -->
+      <label for="quantity">
+        QUANTIDADE DE ETIQUETAS
+      </label>
+
+      <input
+        id="quantity"
+        class="quantity-input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        step="1"
+        value="3"
+        required
+      >
+
+      <p class="info-box quantity-info">
+        Digite a quantidade real de etiquetas.
+        Exemplo:
+        <strong>30 etiquetas = 10 fileiras de 3 etiquetas.</strong>
+      </p>
+
+
       <p
         id="form-error"
         class="error"
@@ -108,17 +139,18 @@
       ></p>
 
 
-      <!-- AJUSTES DE FONTE -->
-
+      <!-- AJUSTES DA ETIQUETA -->
       <details class="font-settings">
 
         <summary>
           <span>AJUSTES DA ETIQUETA</span>
-          <span class="settings-arrow"></span>
+          <span class="settings-arrow">▼</span>
         </summary>
 
         <div class="settings-content">
 
+
+          <!-- SKU -->
           <div class="font-control">
 
             <span>SKU</span>
@@ -150,6 +182,7 @@
           </div>
 
 
+          <!-- TEXTO LOTE -->
           <div class="font-control">
 
             <span>LOTE:</span>
@@ -181,9 +214,10 @@
           </div>
 
 
+          <!-- VALOR DO LOTE -->
           <div class="font-control">
 
-            <span>LOTE</span>
+            <span>VALOR DO LOTE</span>
 
             <div>
 
@@ -196,7 +230,7 @@
               </button>
 
               <output id="lot-value-font-value">
-                5,8 pt
+                6,2 pt
               </output>
 
               <button
@@ -231,6 +265,7 @@
       </details>
 
 
+      <!-- BOTÕES -->
       <div class="actions">
 
         <button
@@ -238,7 +273,7 @@
           class="primary"
           type="button"
         >
-          IMPRIMIR ETIQUETA
+          IMPRIMIR ETIQUETAS
         </button>
 
         <button
@@ -258,7 +293,6 @@
 
 
   <!-- PRÉ-VISUALIZAÇÃO -->
-
   <section
     id="preview-section"
     class="preview-column"
@@ -273,10 +307,7 @@
 
     <div class="label-card">
 
-      <div
-        id="print-label"
-        class="print-label screen-label"
-      >
+      <div class="screen-label">
 
         <div
           id="qr-code"
@@ -321,10 +352,11 @@
     </div>
 
 
+    <!-- INFORMAÇÕES DA IMPRESSÃO -->
     <div class="printer-card">
 
       <h3>
-        CONFIGURAÇÃO DA IMPRESSORA
+        CONFIGURAÇÃO DA IMPRESSÃO
       </h3>
 
       <p>
@@ -342,9 +374,14 @@
         Zebra ZD220t
       </p>
 
+      <p id="page-summary">
+        Informe a quantidade de etiquetas.
+      </p>
+
     </div>
 
 
+    <!-- PAYLOAD -->
     <div class="qr-data-card">
 
       <h3>
@@ -365,151 +402,40 @@
 <!--
   ÁREA EXCLUSIVA DE IMPRESSÃO
 
-  3 etiquetas de 33 mm
-  + dois espaços de 1,5 mm
+  O JavaScript da v1.0.8 criará aqui
+  automaticamente quantas fileiras forem
+  necessárias.
 
-  largura total = 102 mm
+  Cada fileira:
+
+  33 mm
+  + 1,5 mm
+  + 33 mm
+  + 1,5 mm
+  + 33 mm
+
+  Total = 102 mm
 -->
 
 <div
-  id="print-row"
-  class="print-row"
+  id="print-area"
   aria-hidden="true"
->
-
-
-  <!-- ETIQUETA 1 -->
-
-  <div class="print-copy">
-
-    <div class="print-qr"></div>
-
-    <div class="label-data">
-
-      <p class="label-sku">
-
-        <span>SKU</span>
-
-        <strong class="print-sku"></strong>
-
-      </p>
-
-      <div class="label-lot">
-
-        <span>LOTE:</span>
-
-        <strong>
-
-          <span class="lote-prefixo">
-            L
-          </span>
-
-          <span
-            class="lote-numero print-lot"
-          ></span>
-
-        </strong>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- ETIQUETA 2 -->
-
-  <div class="print-copy">
-
-    <div class="print-qr"></div>
-
-    <div class="label-data">
-
-      <p class="label-sku">
-
-        <span>SKU</span>
-
-        <strong class="print-sku"></strong>
-
-      </p>
-
-      <div class="label-lot">
-
-        <span>LOTE:</span>
-
-        <strong>
-
-          <span class="lote-prefixo">
-            L
-          </span>
-
-          <span
-            class="lote-numero print-lot"
-          ></span>
-
-        </strong>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- ETIQUETA 3 -->
-
-  <div class="print-copy">
-
-    <div class="print-qr"></div>
-
-    <div class="label-data">
-
-      <p class="label-sku">
-
-        <span>SKU</span>
-
-        <strong class="print-sku"></strong>
-
-      </p>
-
-      <div class="label-lot">
-
-        <span>LOTE:</span>
-
-        <strong>
-
-          <span class="lote-prefixo">
-            L
-          </span>
-
-          <span
-            class="lote-numero print-lot"
-          ></span>
-
-        </strong>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
+></div>
 
 
 
 <footer>
 
   <p>
-    Use <strong>Ctrl + P</strong>
-    ou <strong>IMPRIMIR ETIQUETA</strong>.
+    Use o botão
+    <strong>IMPRIMIR ETIQUETAS</strong>
+    ou
+    <strong>Ctrl + P</strong>.
   </p>
 
   <p>
-    Impressão:
-    3 etiquetas de 33 × 21 mm por fileira.
+    Cada fileira contém até
+    <strong>3 etiquetas de 33 × 21 mm</strong>.
   </p>
 
   <p class="authorship">
@@ -521,6 +447,7 @@
 
 
 
+<!-- ATUALIZAÇÃO PWA -->
 <aside
   id="update-banner"
   class="update-banner"
@@ -539,6 +466,7 @@
   </button>
 
 </aside>
+
 
 
 <script src="vendor/qrcode.min.js"></script>
