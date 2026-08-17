@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '1.0.7';
+const APP_VERSION = '1.0.8';
 
 const FONT_STORAGE_KEY = 'configEtiqueta';
 
@@ -10,9 +10,9 @@ const FONT_RULES = {
     min: 8,
     max: 12,
     step: 0.2,
-    previewRatio: 26 / 11,
     printVar: '--sku-font-print',
     previewVar: '--sku-font-preview',
+    previewRatio: 26 / 11,
     output: '#sku-font-value'
   },
 
@@ -21,20 +21,20 @@ const FONT_RULES = {
     min: 3.8,
     max: 5.2,
     step: 0.1,
-    previewRatio: 11 / 4.5,
     printVar: '--lot-label-font-print',
     previewVar: '--lot-label-font-preview',
+    previewRatio: 11 / 4.5,
     output: '#lot-label-font-value'
   },
 
   lotValue: {
-    defaultValue: 5.8,
-    min: 4.5,
-    max: 6.5,
+    defaultValue: 6.2,
+    min: 5.0,
+    max: 6.6,
     step: 0.1,
-    previewRatio: 13 / 5.8,
     printVar: '--lot-value-font-print',
     previewVar: '--lot-value-font-preview',
+    previewRatio: 14 / 6.2,
     output: '#lot-value-font-value'
   }
 };
@@ -53,6 +53,9 @@ const lotPartTwoInput =
 const postureInput =
   document.querySelector('#posture');
 
+const quantityInput =
+  document.querySelector('#quantity');
+
 const completeLotOutput =
   document.querySelector('#complete-lot');
 
@@ -65,11 +68,20 @@ const preview =
 const qrContainer =
   document.querySelector('#qr-code');
 
+const labelSku =
+  document.querySelector('#label-sku');
+
 const labelLotNumber =
   document.querySelector('#label-lot-number');
 
-const printRow =
-  document.querySelector('#print-row');
+const payloadOutput =
+  document.querySelector('#payload');
+
+const pageSummary =
+  document.querySelector('#page-summary');
+
+const printArea =
+  document.querySelector('#print-area');
 
 
 let waitingWorker = null;
@@ -79,77 +91,93 @@ let fontSettings =
   Object.fromEntries(
     Object.entries(FONT_RULES)
       .map(
-        ([key, rule]) =>
-          [key, rule.defaultValue]
+        ([key, rule]) => [
+          key,
+          rule.defaultValue
+        ]
       )
   );
 
 
-document.querySelector('#app-version')
-  .textContent = APP_VERSION;
+document
+  .querySelector('#app-version')
+  .textContent =
+    APP_VERSION;
 
 
-
-/* =========================
+/* =========================================================
    FONTES
-   ========================= */
+   ========================================================= */
 
-function applyFontSettings(save = true) {
+function applyFontSettings(
+  save = true
+) {
 
-  Object.entries(FONT_RULES)
-    .forEach(([key, rule]) => {
+  Object
+    .entries(FONT_RULES)
+    .forEach(
+      ([key, rule]) => {
 
-      const value =
-        fontSettings[key];
+        const value =
+          fontSettings[key];
 
-      document.documentElement
-        .style
-        .setProperty(
-          rule.printVar,
-          `${value}pt`
-        );
 
-      document.documentElement
-        .style
-        .setProperty(
-          rule.previewVar,
-          `${
-            (
-              value *
-              rule.previewRatio
-            ).toFixed(2)
-          }px`
-        );
+        document
+          .documentElement
+          .style
+          .setProperty(
+            rule.printVar,
+            `${value}pt`
+          );
 
-      const output =
-        document.querySelector(
-          rule.output
-        );
 
-      if (output) {
+        document
+          .documentElement
+          .style
+          .setProperty(
+            rule.previewVar,
+            `${
+              (
+                value *
+                rule.previewRatio
+              ).toFixed(2)
+            }px`
+          );
 
-        output.textContent =
-          `${
-            value
-              .toFixed(1)
-              .replace('.', ',')
-          } pt`;
+
+        const output =
+          document
+            .querySelector(
+              rule.output
+            );
+
+
+        if (output) {
+
+          output.textContent =
+            `${
+              value
+                .toFixed(1)
+                .replace('.', ',')
+            } pt`;
+
+        }
 
       }
-
-    });
+    );
 
 
   if (save) {
 
     try {
 
-      localStorage.setItem(
-        FONT_STORAGE_KEY,
-        JSON.stringify(
-          fontSettings
-        )
-      );
+      localStorage
+        .setItem(
+          FONT_STORAGE_KEY,
+          JSON.stringify(
+            fontSettings
+          )
+        );
 
     } catch {}
 
@@ -165,32 +193,42 @@ function restoreSavedFontSettings() {
 
     const saved =
       JSON.parse(
-        localStorage.getItem(
-          FONT_STORAGE_KEY
-        )
+        localStorage
+          .getItem(
+            FONT_STORAGE_KEY
+          )
       );
 
-    if (!saved) return;
+
+    if (!saved) {
+      return;
+    }
 
 
-    Object.entries(FONT_RULES)
-      .forEach(([key, rule]) => {
+    Object
+      .entries(FONT_RULES)
+      .forEach(
+        ([key, rule]) => {
 
-        const value =
-          Number(saved[key]);
+          const value =
+            Number(
+              saved[key]
+            );
 
-        if (
-          Number.isFinite(value) &&
-          value >= rule.min &&
-          value <= rule.max
-        ) {
 
-          fontSettings[key] =
-            value;
+          if (
+            Number.isFinite(value) &&
+            value >= rule.min &&
+            value <= rule.max
+          ) {
+
+            fontSettings[key] =
+              value;
+
+          }
 
         }
-
-      });
+      );
 
   } catch {}
 
@@ -205,104 +243,130 @@ applyFontSettings(false);
 
 
 document
-  .querySelectorAll('[data-font]')
-  .forEach((button) => {
+  .querySelectorAll(
+    '[data-font]'
+  )
+  .forEach(
+    (button) => {
 
-    button.addEventListener(
-      'click',
-      () => {
+      button
+        .addEventListener(
+          'click',
+          () => {
 
-        const key =
-          button.dataset.font;
-
-        const rule =
-          FONT_RULES[key];
-
-        const direction =
-          Number(
-            button.dataset.direction
-          );
-
-        const nextValue =
-          Number(
-            (
-              fontSettings[key] +
-              direction *
-              rule.step
-            )
-            .toFixed(1)
-          );
-
-        const message =
-          document.querySelector(
-            '#font-limit-message'
-          );
+            const key =
+              button
+                .dataset
+                .font;
 
 
-        if (
-          nextValue < rule.min
-        ) {
-
-          message.textContent =
-            'Limite mínimo atingido para esta etiqueta.';
-
-          return;
-
-        }
+            const direction =
+              Number(
+                button
+                  .dataset
+                  .direction
+              );
 
 
-        if (
-          nextValue > rule.max
-        ) {
-
-          message.textContent =
-            'Limite máximo atingido para esta etiqueta.';
-
-          return;
-
-        }
+            const rule =
+              FONT_RULES[key];
 
 
-        fontSettings[key] =
-          nextValue;
+            const nextValue =
+              Number(
+                (
+                  fontSettings[key] +
+                  direction *
+                  rule.step
+                )
+                  .toFixed(1)
+              );
 
-        message.textContent =
-          '';
 
-        applyFontSettings();
+            const message =
+              document
+                .querySelector(
+                  '#font-limit-message'
+                );
 
-      }
-    );
 
-  });
+            if (
+              nextValue <
+              rule.min
+            ) {
+
+              message
+                .textContent =
+                'Limite mínimo atingido para esta etiqueta.';
+
+              return;
+
+            }
+
+
+            if (
+              nextValue >
+              rule.max
+            ) {
+
+              message
+                .textContent =
+                'Limite máximo seguro atingido para esta etiqueta.';
+
+              return;
+
+            }
+
+
+            fontSettings[key] =
+              nextValue;
+
+
+            message
+              .textContent =
+              '';
+
+
+            applyFontSettings();
+
+          }
+        );
+
+    }
+  );
 
 
 
 document
-  .querySelector('#reset-fonts')
+  .querySelector(
+    '#reset-fonts'
+  )
   .addEventListener(
     'click',
     () => {
 
       fontSettings =
         Object.fromEntries(
-          Object.entries(
-            FONT_RULES
-          )
-          .map(
-            ([key, rule]) =>
-              [
+          Object
+            .entries(
+              FONT_RULES
+            )
+            .map(
+              ([key, rule]) => [
                 key,
                 rule.defaultValue
               ]
-          )
+            )
         );
+
 
       document
         .querySelector(
           '#font-limit-message'
         )
-        .textContent = '';
+        .textContent =
+        '';
+
 
       applyFontSettings();
 
@@ -310,10 +374,9 @@ document
   );
 
 
-
-/* =========================
-   DATAS / LOTES
-   ========================= */
+/* =========================================================
+   DATA
+   ========================================================= */
 
 function parseDate(value) {
 
@@ -345,21 +408,100 @@ function parseDate(value) {
     );
 
 
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
-  )
-    ? {
-        year,
-        month,
-        day
-      }
-    : null;
+  const valid =
+    date.getFullYear() ===
+      year &&
+    date.getMonth() ===
+      month - 1 &&
+    date.getDate() ===
+      day;
+
+
+  if (!valid) {
+    return null;
+  }
+
+
+  return {
+    year,
+    month,
+    day
+  };
 
 }
 
 
+/* =========================================================
+   LOTE
+   ========================================================= */
+
+function sanitizeLotPart(
+  input
+) {
+
+  input.value =
+    input
+      .value
+      .replace(
+        /\D/g,
+        ''
+      )
+      .slice(
+        0,
+        2
+      );
+
+}
+
+
+
+function getLot() {
+
+  const first =
+    lotPartOneInput.value;
+
+  const second =
+    lotPartTwoInput.value;
+
+
+  if (
+    !/^\d{2}$/
+      .test(first)
+  ) {
+
+    return '';
+
+  }
+
+
+  if (
+    !/^\d{2}$/
+      .test(second)
+  ) {
+
+    return '';
+
+  }
+
+
+  return (
+    `${first}.${second}`
+  );
+
+}
+
+
+
+/*
+  LOTE COMPLETO DA TELA
+
+  Exemplo:
+  17.13
+  14/08/2026
+
+  resultado:
+  L17.13.14.08.26
+*/
 
 function calculateCompleteLot(
   lot,
@@ -383,15 +525,29 @@ function calculateCompleteLot(
 
 
   const day =
-    String(date.day)
-      .padStart(2, '0');
+    String(
+      date.day
+    )
+      .padStart(
+        2,
+        '0'
+      );
+
 
   const month =
-    String(date.month)
-      .padStart(2, '0');
+    String(
+      date.month
+    )
+      .padStart(
+        2,
+        '0'
+      );
+
 
   const year =
-    String(date.year)
+    String(
+      date.year
+    )
       .slice(-2);
 
 
@@ -404,13 +560,26 @@ function calculateCompleteLot(
 
 
 /*
-  FORMATO VISÍVEL DA ETIQUETA:
+  LOTE VISÍVEL DA ETIQUETA
 
-  lote 17.13
-  postura 14/08/2026
+  IMPORTANTE:
 
-  resultado:
+  Primeiro grupo do lote
+  + dia da postura
+  + mês da postura
+
+  lote digitado:
+  17.13
+
+  postura:
+  14/08/2026
+
+  etiqueta:
   L17.14.08
+
+  O QR continua mantendo:
+  LOTE=17.13
+  POSTURA=2026-08-14
 */
 
 function calculatePrintedLot(
@@ -435,17 +604,28 @@ function calculatePrintedLot(
 
 
   const firstLotPart =
-    lot.split('.')[0];
+    lot
+      .split('.')[0];
 
 
   const day =
-    String(date.day)
-      .padStart(2, '0');
+    String(
+      date.day
+    )
+      .padStart(
+        2,
+        '0'
+      );
 
 
   const month =
-    String(date.month)
-      .padStart(2, '0');
+    String(
+      date.month
+    )
+      .padStart(
+        2,
+        '0'
+      );
 
 
   return (
@@ -455,43 +635,51 @@ function calculatePrintedLot(
 }
 
 
+/* =========================================================
+   QUANTIDADE
+   ========================================================= */
 
-function sanitizeLotPart(
-  input
+function getQuantity() {
+
+  const quantity =
+    Number.parseInt(
+      quantityInput.value,
+      10
+    );
+
+
+  if (
+    !Number.isInteger(
+      quantity
+    ) ||
+    quantity < 1
+  ) {
+
+    return null;
+
+  }
+
+
+  return quantity;
+
+}
+
+
+
+function calculatePages(
+  quantity
 ) {
 
-  input.value =
-    input.value
-      .replace(/\D/g, '')
-      .slice(0, 2);
+  return Math.ceil(
+    quantity / 3
+  );
 
 }
 
 
-
-function getLot() {
-
-  const first =
-    lotPartOneInput.value;
-
-  const second =
-    lotPartTwoInput.value;
-
-
-  return (
-    /^\d{2}$/.test(first) &&
-    /^\d{2}$/.test(second)
-  )
-    ? `${first}.${second}`
-    : '';
-
-}
-
-
-
-/* =========================
+/* =========================================================
    QR CODE
-   ========================= */
+   ========================================================= */
 
 function createQr(
   container,
@@ -499,17 +687,26 @@ function createQr(
   size = 164
 ) {
 
-  container.replaceChildren();
+  if (!container) {
+    return;
+  }
+
+
+  container
+    .replaceChildren();
 
 
   new QRCode(
     container,
     {
-      text: payload,
+      text:
+        payload,
 
-      width: size,
+      width:
+        size,
 
-      height: size,
+      height:
+        size,
 
       colorDark:
         '#000000',
@@ -518,87 +715,204 @@ function createQr(
         '#ffffff',
 
       correctLevel:
-        QRCode.CorrectLevel.M
+        QRCode
+          .CorrectLevel
+          .M
     }
   );
 
 }
 
 
+/* =========================================================
+   CRIA UMA ETIQUETA PARA IMPRESSÃO
+   ========================================================= */
 
-/* =========================
-   3 ETIQUETAS DE IMPRESSÃO
-   ========================= */
-
-function updatePrintCopies(
+function createPrintCopy(
   sku,
   printedLot,
-  payload
+  payload,
+  active = true
 ) {
 
-  if (!printRow) return;
+  const copy =
+    document
+      .createElement(
+        'div'
+      );
 
 
-  const printSkus =
-    printRow.querySelectorAll(
+  copy.className =
+    active
+      ? 'print-copy'
+      : 'print-copy empty';
+
+
+  copy.innerHTML = `
+    <div class="print-qr"></div>
+
+    <div class="label-data">
+
+      <p class="label-sku">
+        <span>SKU</span>
+        <strong class="print-sku"></strong>
+      </p>
+
+      <div class="label-lot">
+
+        <span>LOTE:</span>
+
+        <strong>
+
+          <span class="lote-prefixo">
+            L
+          </span>
+
+          <span
+            class="lote-numero print-lot"
+          ></span>
+
+        </strong>
+
+      </div>
+
+    </div>
+  `;
+
+
+  if (!active) {
+    return copy;
+  }
+
+
+  copy
+    .querySelector(
       '.print-sku'
-    );
+    )
+    .textContent =
+    sku;
 
 
-  const printLots =
-    printRow.querySelectorAll(
+  copy
+    .querySelector(
       '.print-lot'
-    );
+    )
+    .textContent =
+    printedLot.slice(1);
 
 
-  const printQrs =
-    printRow.querySelectorAll(
-      '.print-qr'
-    );
+  const qrTarget =
+    copy
+      .querySelector(
+        '.print-qr'
+      );
 
 
-  printSkus
-    .forEach(
-      (element) => {
-
-        element.textContent =
-          sku;
-
-      }
-    );
+  createQr(
+    qrTarget,
+    payload,
+    164
+  );
 
 
-  printLots
-    .forEach(
-      (element) => {
-
-        element.textContent =
-          printedLot.slice(1);
-
-      }
-    );
-
-
-  printQrs
-    .forEach(
-      (container) => {
-
-        createQr(
-          container,
-          payload,
-          164
-        );
-
-      }
-    );
+  return copy;
 
 }
 
 
+/* =========================================================
+   MONTA TODAS AS PÁGINAS DE IMPRESSÃO
+   ========================================================= */
 
-/* =========================
-   ATUALIZAÇÃO DA ETIQUETA
-   ========================= */
+function buildPrintArea(
+  sku,
+  printedLot,
+  payload,
+  quantity
+) {
+
+  printArea
+    .replaceChildren();
+
+
+  const pages =
+    calculatePages(
+      quantity
+    );
+
+
+  for (
+    let pageIndex = 0;
+    pageIndex < pages;
+    pageIndex += 1
+  ) {
+
+    const page =
+      document
+        .createElement(
+          'div'
+        );
+
+
+    page.className =
+      'print-page';
+
+
+    /*
+      Cada página/fileira
+      possui exatamente
+      3 posições.
+    */
+
+    for (
+      let position = 0;
+      position < 3;
+      position += 1
+    ) {
+
+      const labelIndex =
+        pageIndex * 3 +
+        position;
+
+
+      const active =
+        labelIndex <
+        quantity;
+
+
+      const copy =
+        createPrintCopy(
+          sku,
+          printedLot,
+          payload,
+          active
+        );
+
+
+      page
+        .appendChild(
+          copy
+        );
+
+    }
+
+
+    printArea
+      .appendChild(
+        page
+      );
+
+  }
+
+
+  return pages;
+
+}
+
+
+/* =========================================================
+   ATUALIZAÇÃO PRINCIPAL
+   ========================================================= */
 
 function updateLabel() {
 
@@ -618,6 +932,10 @@ function updateLabel() {
     );
 
 
+  const quantity =
+    getQuantity();
+
+
   const completeLot =
     calculateCompleteLot(
       lot,
@@ -634,8 +952,14 @@ function updateLabel() {
 
   completeLotOutput
     .textContent =
-      completeLot || '—';
+    completeLot || '—';
 
+
+  /*
+    Enquanto os três dados
+    principais ainda não foram
+    preenchidos, não gera QR.
+  */
 
   if (
     !sku ||
@@ -646,14 +970,34 @@ function updateLabel() {
     preview.hidden =
       true;
 
-    errorOutput
-      .textContent =
-        '';
-
-    return;
+    return false;
 
   }
 
+
+  if (!quantity) {
+
+    errorOutput
+      .textContent =
+      'Informe uma quantidade válida de etiquetas.';
+
+    preview.hidden =
+      true;
+
+    return false;
+
+  }
+
+
+  /*
+    PAYLOAD DO QR
+
+    NÃO ALTERAR.
+
+    O Romaneio precisa
+    continuar recebendo
+    exatamente estes dados.
+  */
 
   const payload =
     `SKU=${sku};LOTE=${lot};POSTURA=${postureInput.value}`;
@@ -661,38 +1005,27 @@ function updateLabel() {
 
   errorOutput
     .textContent =
-      '';
+    '';
 
 
-  completeLotOutput
+  /*
+    PREVIEW
+  */
+
+  labelSku
     .textContent =
-      completeLot;
-
-
-  document
-    .querySelector(
-      '#label-sku'
-    )
-    .textContent =
-      sku;
+    sku;
 
 
   labelLotNumber
     .textContent =
-      printedLot.slice(1);
+    printedLot.slice(1);
 
 
-  document
-    .querySelector(
-      '#payload'
-    )
+  payloadOutput
     .textContent =
-      payload;
+    payload;
 
-
-  /*
-    PRÉ-VISUALIZAÇÃO NORMAL
-  */
 
   createQr(
     qrContainer,
@@ -702,58 +1035,76 @@ function updateLabel() {
 
 
   /*
-    3 CÓPIAS DA FILEIRA
+    IMPRESSÃO
   */
 
-  updatePrintCopies(
-    sku,
-    printedLot,
-    payload
-  );
+  const pages =
+    buildPrintArea(
+      sku,
+      printedLot,
+      payload,
+      quantity
+    );
+
+
+  pageSummary
+    .innerHTML =
+    `
+      <strong>${quantity}</strong>
+      etiqueta(s)
+      =
+      <strong>${pages}</strong>
+      fileira(s)/página(s)
+      de até 3 etiquetas.
+    `;
 
 
   preview.hidden =
     false;
 
+
+  return true;
+
 }
 
 
-
-/* =========================
-   EVENTOS
-   ========================= */
+/* =========================================================
+   CAMPOS
+   ========================================================= */
 
 [
   skuInput,
   lotPartOneInput,
   lotPartTwoInput,
-  postureInput
+  postureInput,
+  quantityInput
 ]
 .forEach(
   (input) => {
 
-    input.addEventListener(
-      'input',
-      () => {
+    input
+      .addEventListener(
+        'input',
+        () => {
 
-        if (
-          input ===
-            lotPartOneInput ||
-          input ===
-            lotPartTwoInput
-        ) {
+          if (
+            input ===
+              lotPartOneInput ||
+            input ===
+              lotPartTwoInput
+          ) {
 
-          sanitizeLotPart(
-            input
-          );
+            sanitizeLotPart(
+              input
+            );
+
+          }
+
+
+          updateLabel();
 
         }
-
-
-        updateLabel();
-
-      }
-    );
+      );
 
   }
 );
@@ -786,16 +1137,16 @@ form
     'submit',
     (event) => {
 
-      event.preventDefault();
+      event
+        .preventDefault();
 
     }
   );
 
 
-
-/* =========================
-   IMPRESSÃO
-   ========================= */
+/* =========================================================
+   BOTÃO IMPRIMIR
+   ========================================================= */
 
 document
   .querySelector(
@@ -805,36 +1156,27 @@ document
     'click',
     () => {
 
-      const sku =
-        skuInput
-          .value
-          .trim();
-
-      const lot =
-        getLot();
-
-      const date =
-        parseDate(
-          postureInput.value
-        );
+      const valid =
+        updateLabel();
 
 
-      if (
-        !sku ||
-        !lot ||
-        !date
-      ) {
+      if (!valid) {
 
-        errorOutput
-          .textContent =
-            'Preencha SKU, lote e data de postura antes de imprimir.';
+        if (
+          !errorOutput
+            .textContent
+        ) {
+
+          errorOutput
+            .textContent =
+            'Preencha SKU, lote, data de postura e quantidade antes de imprimir.';
+
+        }
 
         return;
 
       }
 
-
-      updateLabel();
 
       window.print();
 
@@ -842,6 +1184,31 @@ document
   );
 
 
+/* =========================================================
+   CTRL + P
+   =========================================================
+
+   O navegador dispara beforeprint.
+
+   Assim, mesmo se o usuário usar
+   Ctrl + P, todas as páginas são
+   montadas antes da impressão.
+   ========================================================= */
+
+window
+  .addEventListener(
+    'beforeprint',
+    () => {
+
+      updateLabel();
+
+    }
+  );
+
+
+/* =========================================================
+   NOVA ETIQUETA
+   ========================================================= */
 
 document
   .querySelector(
@@ -851,32 +1218,42 @@ document
     'click',
     () => {
 
+      /*
+        Mantemos os dados digitados
+        como nas versões anteriores.
+
+        O botão apenas volta o foco
+        para permitir nova operação.
+      */
+
       preview.hidden =
         true;
 
+
       errorOutput
         .textContent =
-          '';
+        '';
+
 
       skuInput
         .focus();
 
-      window.scrollTo(
-        {
-          top: 0,
-          behavior:
-            'smooth'
-        }
-      );
+
+      window
+        .scrollTo(
+          {
+            top: 0,
+            behavior: 'smooth'
+          }
+        );
 
     }
   );
 
 
-
-/* =========================
+/* =========================================================
    ATUALIZAÇÃO PWA
-   ========================= */
+   ========================================================= */
 
 function showUpdate(
   worker
@@ -885,12 +1262,13 @@ function showUpdate(
   waitingWorker =
     worker;
 
+
   document
     .querySelector(
       '#update-banner'
     )
     .hidden =
-      false;
+    false;
 
 }
 
@@ -939,15 +1317,20 @@ if (
       () => {
 
         if (
-          !refreshing
+          refreshing
         ) {
 
-          refreshing =
-            true;
-
-          location.reload();
+          return;
 
         }
+
+
+        refreshing =
+          true;
+
+
+        location
+          .reload();
 
       }
     );
@@ -958,70 +1341,97 @@ if (
       'load',
       async () => {
 
-        const registration =
-          await navigator
-            .serviceWorker
-            .register(
-              './sw.js'
+        try {
+
+          const registration =
+            await navigator
+              .serviceWorker
+              .register(
+                './sw.js'
+              );
+
+
+          if (
+            registration
+              .waiting
+          ) {
+
+            showUpdate(
+              registration
+                .waiting
+            );
+
+          }
+
+
+          registration
+            .addEventListener(
+              'updatefound',
+              () => {
+
+                const worker =
+                  registration
+                    .installing;
+
+
+                if (!worker) {
+                  return;
+                }
+
+
+                worker
+                  .addEventListener(
+                    'statechange',
+                    () => {
+
+                      if (
+                        worker.state ===
+                          'installed' &&
+                        navigator
+                          .serviceWorker
+                          .controller
+                      ) {
+
+                        showUpdate(
+                          worker
+                        );
+
+                      }
+
+                    }
+                  );
+
+              }
             );
 
 
-        if (
-          registration.waiting
+          /*
+            Verificação periódica
+            de nova versão.
+          */
+
+          setInterval(
+            () => {
+
+              registration
+                .update();
+
+            },
+            60 *
+            60 *
+            1000
+          );
+
+        } catch (
+          error
         ) {
 
-          showUpdate(
-            registration.waiting
+          console.error(
+            'Falha ao registrar service worker:',
+            error
           );
 
         }
-
-
-        registration
-          .addEventListener(
-            'updatefound',
-            () => {
-
-              const worker =
-                registration
-                  .installing;
-
-
-              worker
-                .addEventListener(
-                  'statechange',
-                  () => {
-
-                    if (
-                      worker.state ===
-                        'installed' &&
-                      navigator
-                        .serviceWorker
-                        .controller
-                    ) {
-
-                      showUpdate(
-                        worker
-                      );
-
-                    }
-
-                  }
-                );
-
-            }
-          );
-
-
-        setInterval(
-          () =>
-            registration
-              .update(),
-
-          60 *
-          60 *
-          1000
-        );
 
       }
     );
@@ -1029,25 +1439,28 @@ if (
 }
 
 
-
-/* =========================
-   TESTES / API INTERNA
-   ========================= */
+/* =========================================================
+   API INTERNA PARA TESTES
+   ========================================================= */
 
 window.PalletLabel = {
 
-  calculateCompleteLot,
-
-  calculatePrintedLot,
+  APP_VERSION,
 
   parseDate,
 
   getLot,
 
-  updateLabel,
+  calculateCompleteLot,
 
-  updatePrintCopies,
+  calculatePrintedLot,
 
-  APP_VERSION
+  getQuantity,
+
+  calculatePages,
+
+  buildPrintArea,
+
+  updateLabel
 
 };
