@@ -125,13 +125,9 @@ function updateLabel() {
   const lot = getLot();
   const date = parseDate(postureInput.value);
   const completeLot = calculateCompleteLot(lot, postureInput.value);
-  completeLotOutput.textContent = completeLot || '—';
+  const printedLot = calculatePrintedLot(lot, postureInput.value);
 
-  if (!sku || !lot || !date) {
-    preview.hidden = true;
-    errorOutput.textContent = '';
-    return;
-  }
+  completeLotOutput.textContent = completeLot || '—';
 
   const payload = `SKU=${sku};LOTE=${lot};POSTURA=${postureInput.value}`;
   errorOutput.textContent = '';
