@@ -193,3 +193,14 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 }
 
 window.PalletLabel = { calculateCompleteLot, parseDate, getLot, updateLabel, APP_VERSION };
+
+function calculatePrintedLot(lot, dateValue) {
+  const date = parseDate(dateValue);
+  if (!lot || !date) return '';
+
+  const firstLotPart = lot.split('.')[0];
+  const day = String(date.day).padStart(2, '0');
+  const month = String(date.month).padStart(2, '0');
+
+  return `L${firstLotPart}.${day}.${month}`;
+}
