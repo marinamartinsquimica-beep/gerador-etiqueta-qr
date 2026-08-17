@@ -1,5 +1,5 @@
 const CACHE_NAME =
-  'gerador-qr-paletes-v1.0.8-quantidade-etiquetas';
+  'gerador-qr-paletes-v1.0.9-lote-duas-linhas';
 
 
 const ASSETS = [
@@ -44,7 +44,7 @@ self.addEventListener(
 
 /* =========================================================
    ATIVAÇÃO
-   Remove caches das versões anteriores.
+   Remove caches das versões anteriores
    ========================================================= */
 
 self.addEventListener(
@@ -88,10 +88,9 @@ self.addEventListener(
 
 
 /* =========================================================
-   RECURSOS
-
+   FETCH
    Prioriza a versão publicada.
-   Se estiver offline, utiliza o cache.
+   Se estiver offline, usa o cache.
    ========================================================= */
 
 self.addEventListener(
@@ -115,11 +114,6 @@ self.addEventListener(
       )
         .then(
           (response) => {
-
-            /*
-              Só salva respostas
-              válidas.
-            */
 
             if (
               !response ||
