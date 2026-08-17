@@ -99,19 +99,290 @@ footer p { margin:4px 0; font-size:.78rem; }
   .label-card { justify-content:start; overflow:auto; padding:20px 10px; }
   .update-banner { right:10px; bottom:10px; left:10px; justify-content:space-between; }
 }
-@page { size:33mm 21mm; margin:0; }
+/* =========================================================
+   IMPRESSÃO ZEBRA — 3 ETIQUETAS POR FILEIRA
+   33 mm + 1,5 mm + 33 mm + 1,5 mm + 33 mm = 102 mm
+   Altura: 21 mm
+   ========================================================= */
+
+#print-row {
+  display: none;
+}
+
+@page {
+  size: 102mm 21mm;
+  margin: 0;
+}
+
 @media print {
-  html,body { width:33mm!important; height:21mm!important; min-height:0!important; margin:0!important; padding:0!important; overflow:hidden!important; color:#000!important; background:#fff!important; }
-  .topbar,.form-card,.preview-column>h2,.printer-card,.qr-data-card,footer,.update-banner { display:none!important; }
-  .app-shell,.preview-column,.label-card { display:block!important; width:33mm!important; height:21mm!important; margin:0!important; padding:0!important; border:0!important; border-radius:0!important; background:#fff!important; box-shadow:none!important; overflow:hidden!important; }
-  #print-label { width:33mm!important; height:21mm!important; padding:1mm!important; gap:1mm!important; color:#000!important; background:#fff!important; box-shadow:none!important; overflow:hidden!important; }
-  #qr-code { width:19mm!important; height:19mm!important; flex:0 0 19mm!important; background:#fff!important; }
-  #qr-code img,#qr-code canvas { width:16mm!important; height:16mm!important; }
-  .label-data { height:19mm!important; color:#000!important; }
-  .label-sku span { color:#000!important; font-size:6pt!important; }
-  .label-sku strong { margin-top:.6mm!important; color:#000!important; font-size:var(--sku-font-print)!important; }
-  .label-lot { margin-top:2.2mm!important; }
-  .label-lot>span { color:#000!important; font-size:var(--lot-label-font-print)!important; }
-  .label-lot strong { width:100%!important; margin-top:.6mm!important; color:#000!important; font-size:var(--lot-value-font-print)!important; letter-spacing:-.09em!important; white-space:nowrap!important; overflow:visible!important; }
-  .lote-prefixo { margin-right:.4mm!important; }
+
+  html,
+  body {
+    width: 102mm !important;
+    height: 21mm !important;
+    min-width: 102mm !important;
+    min-height: 21mm !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+
+    background: #fff !important;
+  }
+
+
+  /* ESCONDE TODA A INTERFACE */
+
+  body > * {
+    display: none !important;
+  }
+
+
+  /* MOSTRA SOMENTE A FILEIRA DE IMPRESSÃO */
+
+  #print-row {
+    display: flex !important;
+
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 102mm !important;
+    height: 21mm !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    gap: 1.5mm !important;
+
+    align-items: flex-start !important;
+
+    overflow: hidden !important;
+
+    background: #fff !important;
+  }
+
+
+  /* CADA ETIQUETA */
+
+  .print-copy {
+    width: 33mm !important;
+    height: 21mm !important;
+
+    flex: 0 0 33mm !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    gap: 0.8mm !important;
+
+    margin: 0 !important;
+
+    padding:
+      1mm
+      0.7mm
+      1mm
+      0.7mm !important;
+
+    overflow: hidden !important;
+
+    color: #000 !important;
+    background: #fff !important;
+
+    box-sizing: border-box !important;
+  }
+
+
+  /* ÁREA DO QR */
+
+  .print-qr {
+    width: 18.5mm !important;
+    height: 19mm !important;
+
+    flex:
+      0
+      0
+      18.5mm !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    overflow: hidden !important;
+
+    background: #fff !important;
+  }
+
+
+  /* QR REAL */
+
+  .print-qr img,
+  .print-qr canvas {
+    display: block !important;
+
+    width: 16mm !important;
+    height: 16mm !important;
+
+    max-width: 16mm !important;
+    max-height: 16mm !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    image-rendering: pixelated;
+  }
+
+
+  /* COLUNA DE DADOS */
+
+  .print-copy .label-data {
+    min-width: 0 !important;
+
+    height: 19mm !important;
+
+    flex: 1 1 auto !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+
+    overflow: hidden !important;
+
+    color: #000 !important;
+  }
+
+
+  /* SKU */
+
+  .print-copy .label-sku {
+    margin: 0 !important;
+
+    line-height: 1 !important;
+
+    white-space: nowrap !important;
+  }
+
+
+  .print-copy .label-sku span {
+    display: block !important;
+
+    color: #000 !important;
+
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif !important;
+
+    font-size: 5.5pt !important;
+
+    font-weight: 900 !important;
+
+    line-height: 1 !important;
+  }
+
+
+  .print-copy .label-sku strong {
+    display: block !important;
+
+    margin-top: 0.5mm !important;
+
+    color: #000 !important;
+
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif !important;
+
+    font-size:
+      var(--sku-font-print) !important;
+
+    font-weight: 900 !important;
+
+    line-height: 1 !important;
+
+    white-space: nowrap !important;
+  }
+
+
+  /* LOTE */
+
+  .print-copy .label-lot {
+    margin-top: 2mm !important;
+
+    min-width: 0 !important;
+
+    overflow: hidden !important;
+  }
+
+
+  .print-copy .label-lot > span {
+    display: block !important;
+
+    color: #000 !important;
+
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif !important;
+
+    font-size:
+      var(--lot-label-font-print) !important;
+
+    font-weight: 900 !important;
+
+    line-height: 1 !important;
+
+    white-space: nowrap !important;
+  }
+
+
+  /* VALOR DO LOTE */
+
+  .print-copy .label-lot strong {
+    display: flex !important;
+
+    align-items: baseline !important;
+
+    width: 100% !important;
+
+    margin-top: 0.6mm !important;
+
+    color: #000 !important;
+
+    font-family:
+      "Arial Narrow",
+      Arial,
+      Helvetica,
+      sans-serif !important;
+
+    font-size:
+      var(--lot-value-font-print) !important;
+
+    font-weight: 900 !important;
+
+    line-height: 1 !important;
+
+    letter-spacing: -0.04em !important;
+
+    white-space: nowrap !important;
+
+    overflow: hidden !important;
+  }
+
+
+  .print-copy .lote-prefixo {
+    flex: 0 0 auto !important;
+
+    margin-right: 0.45mm !important;
+  }
+
+
+  .print-copy .lote-numero {
+    min-width: 0 !important;
+
+    white-space: nowrap !important;
+  }
 }
