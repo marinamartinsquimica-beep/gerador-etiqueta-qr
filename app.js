@@ -71,8 +71,11 @@ const qrContainer =
 const labelSku =
   document.querySelector('#label-sku');
 
-const labelLotNumber =
-  document.querySelector('#label-lot-number');
+const labelLotLine1 =
+  document.querySelector('#label-lot-line1');
+
+const labelLotLine2 =
+  document.querySelector('#label-lot-line2');
 
 const payloadOutput =
   document.querySelector('#payload');
@@ -598,9 +601,50 @@ function calculatePrintedLot(
     !date
   ) {
 
-    return '';
+    return null;
 
   }
+
+
+  const firstLotPart =
+    lot
+      .split('.')[0];
+
+
+  const day =
+    String(
+      date.day
+    )
+      .padStart(
+        2,
+        '0'
+      );
+
+
+  const month =
+    String(
+      date.month
+    )
+      .padStart(
+        2,
+        '0'
+      );
+
+
+  return {
+
+    line1:
+      `L${firstLotPart}`,
+
+    line2:
+      `${day}.${month}`,
+
+    full:
+      `L${firstLotPart}.${day}.${month}`
+
+  };
+
+}
 
 
   const firstLotPart =
@@ -760,21 +804,21 @@ function createPrintCopy(
 
       <div class="label-lot">
 
-        <span>LOTE:</span>
+  <span>LOTE:</span>
 
-        <strong>
+  <strong class="lot-value-two-lines">
 
-          <span class="lote-prefixo">
-            L
-          </span>
+    <span
+      class="print-lot-line1 lot-line1"
+    ></span>
 
-          <span
-            class="lote-numero print-lot"
-          ></span>
+    <span
+      class="print-lot-line2 lot-line2"
+    ></span>
 
-        </strong>
+  </strong>
 
-      </div>
+</div>
 
     </div>
   `;
@@ -793,12 +837,20 @@ function createPrintCopy(
     sku;
 
 
-  copy
-    .querySelector(
-      '.print-lot'
-    )
-    .textContent =
-    printedLot.slice(1);
+ copy
+  .querySelector(
+    '.print-lot-line1'
+  )
+  .textContent =
+  printedLot.line1;
+
+
+copy
+  .querySelector(
+    '.print-lot-line2'
+  )
+  .textContent =
+  printedLot.line2;labelLotNumber
 
 
   const qrTarget =
@@ -1017,9 +1069,14 @@ function updateLabel() {
     sku;
 
 
-  labelLotNumber
-    .textContent =
-    printedLot.slice(1);
+ labelLotLine1
+  .textContent =
+  printedLot.line1;
+
+
+labelLotLine2
+  .textContent =
+  printedLot.line2;
 
 
   payloadOutput
