@@ -4,7 +4,7 @@
    VERSÃO
    ========================================================= */
 
-const APP_VERSION = '1.0.9';
+const APP_VERSION = '1.0.10';
 
 const FONT_STORAGE_KEY = 'configEtiqueta';
 
