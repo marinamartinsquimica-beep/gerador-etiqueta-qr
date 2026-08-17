@@ -1598,11 +1598,6 @@ footer p {
 
 @media print {
 
-  /*
-    Área reservada ao QR reduzida
-    de 17,6 mm para 16,6 mm.
-  */
-
   .print-qr {
     width: 16.6mm !important;
     height: 19mm !important;
@@ -1613,15 +1608,6 @@ footer p {
       16.6mm !important;
   }
 
-
-  /*
-    QR físico:
-    16 mm -> 15 mm
-
-    Mantém espaço branco ao redor
-    para facilitar a leitura.
-  */
-
   .print-qr img,
   .print-qr canvas {
     width: 15mm !important;
@@ -1631,44 +1617,20 @@ footer p {
     max-height: 15mm !important;
   }
 
-
-  /*
-    Ganhamos aproximadamente
-    1 mm para os textos.
-  */
-
   .print-copy .label-data {
     min-width: 0 !important;
     flex: 1 1 auto !important;
   }
 
-
-  /*
-    PRIMEIRA LINHA DO LOTE
-
-    L17
-  */
-
   .print-copy .lot-line1 {
     font-size: 9pt !important;
-
     line-height: 0.9 !important;
-
     font-weight: 900 !important;
   }
 
-
-  /*
-    SEGUNDA LINHA
-
-    14.08
-  */
-
   .print-copy .lot-line2 {
     font-size: 8.6pt !important;
-
     line-height: 0.9 !important;
-
     font-weight: 900 !important;
   }
 
