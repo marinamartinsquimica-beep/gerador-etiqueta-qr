@@ -12,7 +12,7 @@ const skuInput = document.querySelector('#sku');
 const lotPartOneInput = document.querySelector('#lot-part-one');
 const lotPartTwoInput = document.querySelector('#lot-part-two');
 const postureInput = document.querySelector('#posture');
-const completeLotOutput = document.querySelector('#complete-lot');
+const printedLot = calculatePrintedLot(lot, postureInput.value);
 const errorOutput = document.querySelector('#form-error');
 const preview = document.querySelector('#preview-section');
 const qrContainer = document.querySelector('#qr-code');
@@ -137,7 +137,7 @@ function updateLabel() {
   errorOutput.textContent = '';
   completeLotOutput.textContent = completeLot;
   document.querySelector('#label-sku').textContent = sku;
-  labelLotNumber.textContent = completeLot.slice(1);
+  labelLotNumber.textContent = printedLot.slice(1);
   document.querySelector('#payload').textContent = payload;
   qrContainer.replaceChildren();
   new QRCode(qrContainer, { text: payload, width: 164, height: 164, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
