@@ -12,7 +12,6 @@ const skuInput = document.querySelector('#sku');
 const lotPartOneInput = document.querySelector('#lot-part-one');
 const lotPartTwoInput = document.querySelector('#lot-part-two');
 const postureInput = document.querySelector('#posture');
-const printedLot = calculatePrintedLot(lot, postureInput.value);
 const errorOutput = document.querySelector('#form-error');
 const preview = document.querySelector('#preview-section');
 const qrContainer = document.querySelector('#qr-code');
