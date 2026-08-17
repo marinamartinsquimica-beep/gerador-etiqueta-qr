@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '1.0.4';
+const APP_VERSION = '1.0.5';
 const FONT_STORAGE_KEY = 'configEtiqueta';
 const FONT_RULES = {
   sku: { defaultValue: 11, min: 8, max: 12, step: 0.2, previewRatio: 26 / 11, printVar: '--sku-font-print', previewVar: '--sku-font-preview', output: '#sku-font-value' },
