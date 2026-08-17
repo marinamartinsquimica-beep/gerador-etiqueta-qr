@@ -1,5 +1,5 @@
 const CACHE_NAME =
-  'gerador-qr-paletes-v1.0.9-lote-duas-linhas';
+  'gerador-qr-paletes-v1.0.10-qr15-lote-maior';
 
 
 const ASSETS = [
