@@ -1,5 +1,5 @@
 const CACHE_NAME =
-  'gerador-qr-paletes-v1.0.10-qr15-lote-maior';
+  'gerador-data-matrix-paletes-v1.1.0';
 
 
 const ASSETS = [
@@ -9,7 +9,8 @@ const ASSETS = [
   './app.js',
   './manifest.webmanifest',
   './version.json',
-  './vendor/qrcode.min.js',
+  './vendor/zxing.min.js',
+  './vendor/LICENSE-zxing.txt',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];

@@ -4,9 +4,12 @@
    VERSÃO
    ========================================================= */
 
-const APP_VERSION = '1.0.10';
+const APP_VERSION = '1.1.0';
 
-const FONT_STORAGE_KEY = 'configEtiqueta';
+// SymbolShapeHint.FORCE_SQUARE no bundle UMD fixado do ZXing 0.23.0.
+const DATA_MATRIX_FORCE_SQUARE = 1;
+
+const FONT_STORAGE_KEY = 'configEtiqueta-v1.1';
 
 
 /* =========================================================
@@ -16,9 +19,9 @@ const FONT_STORAGE_KEY = 'configEtiqueta';
 const FONT_RULES = {
 
   sku: {
-    defaultValue: 11,
-    min: 8,
-    max: 12,
+    defaultValue: 15,
+    min: 10,
+    max: 18,
     step: 0.2,
     printVar: '--sku-font-print',
     previewVar: '--sku-font-preview',
@@ -27,9 +30,9 @@ const FONT_RULES = {
   },
 
   lotLabel: {
-    defaultValue: 4.5,
-    min: 3.8,
-    max: 5.2,
+    defaultValue: 5.2,
+    min: 4.0,
+    max: 6.0,
     step: 0.1,
     printVar: '--lot-label-font-print',
     previewVar: '--lot-label-font-preview',
@@ -38,9 +41,9 @@ const FONT_RULES = {
   },
 
   lotValue: {
-    defaultValue: 6.2,
-    min: 5.0,
-    max: 6.6,
+    defaultValue: 10.5,
+    min: 7.0,
+    max: 13.0,
     step: 0.1,
     printVar: '--lot-value-font-print',
     previewVar: '--lot-value-font-preview',
@@ -629,9 +632,8 @@ function calculateCompleteLot(
    L17
    14.08
 
-   QR continua recebendo:
-   LOTE=17.13
-   POSTURA=2026-08-14
+   Data Matrix recebe:
+   DM1|5008|17.13|2026-08-14
    ========================================================= */
 
 function calculatePrintedLot(
@@ -739,13 +741,23 @@ function calculatePages(
 
 
 /* =========================================================
-   QR CODE
+   DATA MATRIX ECC200
    ========================================================= */
 
-function createQr(
+function buildDataMatrixPayload(
+  sku,
+  lot,
+  posture
+) {
+
+  return `DM1|${sku}|${lot}|${posture}`;
+
+}
+
+
+function createDataMatrix(
   container,
-  payload,
-  size = 164
+  payload
 ) {
 
   if (!container) {
@@ -756,29 +768,126 @@ function createQr(
   container.replaceChildren();
 
 
-  new QRCode(
-    container,
-    {
+  if (
+    !window.ZXing ||
+    typeof window.ZXing.DataMatrixWriter !== 'function'
+  ) {
 
-      text:
+    throw new Error(
+      'Biblioteca Data Matrix indisponível.'
+    );
+
+  }
+
+
+  const hints =
+    new Map();
+
+
+  hints.set(
+    window.ZXing.EncodeHintType.DATA_MATRIX_SHAPE,
+    DATA_MATRIX_FORCE_SQUARE
+  );
+
+
+  const matrix =
+    new window.ZXing.DataMatrixWriter()
+      .encode(
         payload,
+        window.ZXing.BarcodeFormat.DATA_MATRIX,
+        0,
+        0,
+        hints
+      );
 
-      width:
-        size,
 
-      height:
-        size,
+  const quietZone =
+    2;
 
-      colorDark:
-        '#000000',
 
-      colorLight:
-        '#ffffff',
+  const canvas =
+    document.createElement(
+      'canvas'
+    );
 
-      correctLevel:
-        QRCode.CorrectLevel.M
+
+  canvas.width =
+    matrix.getWidth() +
+    quietZone * 2;
+
+
+  canvas.height =
+    matrix.getHeight() +
+    quietZone * 2;
+
+
+  canvas.setAttribute(
+    'aria-label',
+    `Data Matrix: ${payload}`
+  );
+
+
+  const context =
+    canvas.getContext(
+      '2d'
+    );
+
+
+  context.imageSmoothingEnabled =
+    false;
+
+
+  context.fillStyle =
+    '#ffffff';
+
+
+  context.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  context.fillStyle =
+    '#000000';
+
+
+  for (
+    let y = 0;
+    y < matrix.getHeight();
+    y += 1
+  ) {
+
+    for (
+      let x = 0;
+      x < matrix.getWidth();
+      x += 1
+    ) {
+
+      if (
+        matrix.get(
+          x,
+          y
+        )
+      ) {
+
+        context.fillRect(
+          x + quietZone,
+          y + quietZone,
+          1,
+          1
+        );
+
+      }
 
     }
+
+  }
+
+
+  container.appendChild(
+    canvas
   );
 
 }
@@ -875,7 +984,7 @@ function createPrintCopy(
     );
 
 
-  const qrTarget =
+  const dataMatrixTarget =
     copy.querySelector(
       '.print-qr'
     );
@@ -893,10 +1002,9 @@ function createPrintCopy(
     printedLot.line2;
 
 
-  createQr(
-    qrTarget,
-    payload,
-    164
+  createDataMatrix(
+    dataMatrixTarget,
+    payload
   );
 
 
@@ -1075,7 +1183,11 @@ function updateLabel() {
 
 
   const payload =
-    `SKU=${sku};LOTE=${lot};POSTURA=${postureInput.value}`;
+    buildDataMatrixPayload(
+      sku,
+      lot,
+      postureInput.value
+    );
 
 
   errorOutput.textContent =
@@ -1098,10 +1210,9 @@ function updateLabel() {
     payload;
 
 
-  createQr(
+  createDataMatrix(
     qrContainer,
-    payload,
-    164
+    payload
   );
 
 
@@ -1527,6 +1638,10 @@ window.PalletLabel = {
   getQuantity,
 
   calculatePages,
+
+  buildDataMatrixPayload,
+
+  createDataMatrix,
 
   buildPrintArea,
 

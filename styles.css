@@ -11,14 +11,14 @@
   --surface: #ffffff;
   --background: #f4f7fa;
 
-  --sku-font-preview: 26px;
-  --sku-font-print: 11pt;
+  --sku-font-preview: 35.45px;
+  --sku-font-print: 15pt;
 
-  --lot-label-font-preview: 11px;
-  --lot-label-font-print: 4.5pt;
+  --lot-label-font-preview: 12.71px;
+  --lot-label-font-print: 5.2pt;
 
-  --lot-value-font-preview: 14px;
-  --lot-value-font-print: 6.2pt;
+  --lot-value-font-preview: 23.71px;
+  --lot-value-font-print: 10.5pt;
 }
 
 
@@ -592,17 +592,17 @@ button {
 
 
 /* =========================================================
-   QR NA TELA
+   DATA MATRIX NA TELA
    ========================================================= */
 
 .qr-code {
-  width: 194px;
+  width: 116px;
   height: 194px;
 
   flex:
     0
     0
-    194px;
+    116px;
 
   display: grid;
 
@@ -612,15 +612,16 @@ button {
 }
 
 
-.qr-code img,
 .qr-code canvas {
   display: block;
 
-  width: 164px !important;
-  height: 164px !important;
+  width: 105px !important;
+  height: 105px !important;
 
-  max-width: 164px !important;
-  max-height: 164px !important;
+  max-width: 105px !important;
+  max-height: 105px !important;
+
+  image-rendering: pixelated;
 }
 
 
@@ -1148,12 +1149,12 @@ footer p {
 
 
   /* =====================================================
-     QR CODE
+     DATA MATRIX
      ===================================================== */
 
   .print-qr {
     width:
-      17.6mm !important;
+      11mm !important;
 
     height:
       19mm !important;
@@ -1161,7 +1162,7 @@ footer p {
     flex:
       0
       0
-      17.6mm !important;
+      11mm !important;
 
     display:
       flex !important;
@@ -1180,29 +1181,23 @@ footer p {
   }
 
 
-  /*
-    Mantemos o QR em 16 × 16 mm.
+  /* Data Matrix com zona silenciosa incluída no canvas. */
 
-    Não reduzimos o QR para ganhar
-    espaço para o texto.
-  */
-
-  .print-qr img,
   .print-qr canvas {
     display:
       block !important;
 
     width:
-      16mm !important;
+      10.5mm !important;
 
     height:
-      16mm !important;
+      10.5mm !important;
 
     max-width:
-      16mm !important;
+      10.5mm !important;
 
     max-height:
-      16mm !important;
+      10.5mm !important;
 
     margin:
       0 !important;
@@ -1495,13 +1490,13 @@ footer p {
 /* PRÉ-VISUALIZAÇÃO */
 
 .screen-label .lot-line1 {
-  font-size: 19px !important;
+  font-size: var(--lot-value-font-preview) !important;
   line-height: 0.95 !important;
 }
 
 .screen-label .lot-line2 {
   margin-top: 2px !important;
-  font-size: 18px !important;
+  font-size: var(--lot-value-font-preview) !important;
   line-height: 0.95 !important;
 }
 
@@ -1593,28 +1588,27 @@ footer p {
 }
 
 /* =========================================================
-   V1.0.10 — QR 15 MM + LOTE MAIOR
+   V1.1.0 — DATA MATRIX COMPACTO + TEXTO MAIOR
    ========================================================= */
 
 @media print {
 
   .print-qr {
-    width: 16.6mm !important;
+    width: 11mm !important;
     height: 19mm !important;
 
     flex:
       0
       0
-      16.6mm !important;
+      11mm !important;
   }
 
-  .print-qr img,
   .print-qr canvas {
-    width: 15mm !important;
-    height: 15mm !important;
+    width: 10.5mm !important;
+    height: 10.5mm !important;
 
-    max-width: 15mm !important;
-    max-height: 15mm !important;
+    max-width: 10.5mm !important;
+    max-height: 10.5mm !important;
   }
 
   .print-copy .label-data {
@@ -1623,14 +1617,14 @@ footer p {
   }
 
   .print-copy .lot-line1 {
-    font-size: 9pt !important;
-    line-height: 0.9 !important;
+    font-size: var(--lot-value-font-print) !important;
+    line-height: 0.92 !important;
     font-weight: 900 !important;
   }
 
   .print-copy .lot-line2 {
-    font-size: 8.6pt !important;
-    line-height: 0.9 !important;
+    font-size: var(--lot-value-font-print) !important;
+    line-height: 0.92 !important;
     font-weight: 900 !important;
   }
 

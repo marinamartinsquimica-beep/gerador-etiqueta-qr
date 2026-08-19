@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#102a43">
 
-  <title>GERADOR DE ETIQUETA QR</title>
+  <title>GERADOR DE ETIQUETA DATA MATRIX</title>
 
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -16,8 +16,8 @@
 
 <header class="topbar">
   <div class="topbar-inner">
-    <h1>GERADOR DE ETIQUETA QR</h1>
-    <span>v<span id="app-version">1.0.8</span></span>
+    <h1>GERADOR DE ETIQUETA DATA MATRIX</h1>
+    <span>v<span id="app-version">1.1.0</span></span>
   </div>
 </header>
 
@@ -93,7 +93,7 @@
       >
 
       <p class="info-box">
-        No QR será usado o formato:
+        No Data Matrix será usado o formato:
         <strong>AAAA-MM-DD</strong>
       </p>
 
@@ -386,7 +386,7 @@
     <div class="qr-data-card">
 
       <h3>
-        DADOS DO QR CODE
+        DADOS DO DATA MATRIX
         (PARA CONFERÊNCIA)
       </h3>
 
@@ -403,7 +403,7 @@
 <!--
   ÁREA EXCLUSIVA DE IMPRESSÃO
 
-  O JavaScript da v1.0.8 criará aqui
+  O JavaScript criará aqui
   automaticamente quantas fileiras forem
   necessárias.
 
@@ -470,7 +470,7 @@
 
 
 
-<script src="vendor/qrcode.min.js"></script>
+<script src="vendor/zxing.min.js"></script>
 <script src="app.js"></script>
 
 </body>

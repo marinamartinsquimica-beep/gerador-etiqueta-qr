@@ -1,7 +1,7 @@
 {
-  "name": "Gerador de Etiqueta QR",
-  "short_name": "Gerador QR",
-  "description": "Geração e impressão de etiquetas QR para paletes.",
+  "name": "Gerador de Etiqueta Data Matrix",
+  "short_name": "Gerador Data Matrix",
+  "description": "Geração e impressão de etiquetas Data Matrix para paletes.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
