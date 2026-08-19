@@ -596,13 +596,13 @@ button {
    ========================================================= */
 
 .qr-code {
-  width: 116px;
+  width: 86px;
   height: 194px;
 
   flex:
     0
     0
-    116px;
+    86px;
 
   display: grid;
 
@@ -615,11 +615,11 @@ button {
 .qr-code canvas {
   display: block;
 
-  width: 105px !important;
-  height: 105px !important;
+  width: auto !important;
+  height: 190px !important;
 
-  max-width: 105px !important;
-  max-height: 105px !important;
+  max-width: 80px !important;
+  max-height: 190px !important;
 
   image-rendering: pixelated;
 }
@@ -1154,15 +1154,15 @@ footer p {
 
   .print-qr {
     width:
-      11mm !important;
+      8.5mm !important;
 
     height:
-      19mm !important;
+      20mm !important;
 
     flex:
       0
       0
-      11mm !important;
+      8.5mm !important;
 
     display:
       flex !important;
@@ -1188,16 +1188,16 @@ footer p {
       block !important;
 
     width:
-      10.5mm !important;
+      auto !important;
 
     height:
-      10.5mm !important;
+      20mm !important;
 
     max-width:
-      10.5mm !important;
+      8mm !important;
 
     max-height:
-      10.5mm !important;
+      20mm !important;
 
     margin:
       0 !important;
@@ -1588,27 +1588,27 @@ footer p {
 }
 
 /* =========================================================
-   V1.1.0 — DATA MATRIX COMPACTO + TEXTO MAIOR
+   V1.1.1 — DATA MATRIX RETANGULAR VERTICAL
    ========================================================= */
 
 @media print {
 
   .print-qr {
-    width: 11mm !important;
-    height: 19mm !important;
+    width: 8.5mm !important;
+    height: 20mm !important;
 
     flex:
       0
       0
-      11mm !important;
+      8.5mm !important;
   }
 
   .print-qr canvas {
-    width: 10.5mm !important;
-    height: 10.5mm !important;
+    width: auto !important;
+    height: 20mm !important;
 
-    max-width: 10.5mm !important;
-    max-height: 10.5mm !important;
+    max-width: 8mm !important;
+    max-height: 20mm !important;
   }
 
   .print-copy .label-data {

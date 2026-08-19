@@ -4,10 +4,7 @@
    VERSÃO
    ========================================================= */
 
-const APP_VERSION = '1.1.0';
-
-// SymbolShapeHint.FORCE_SQUARE no bundle UMD fixado do ZXing 0.23.0.
-const DATA_MATRIX_FORCE_SQUARE = 1;
+const APP_VERSION = '1.1.1';
 
 const FONT_STORAGE_KEY = 'configEtiqueta-v1.1';
 
@@ -633,7 +630,7 @@ function calculateCompleteLot(
    14.08
 
    Data Matrix recebe:
-   DM1|5008|17.13|2026-08-14
+   D|5008|1713|260814
    ========================================================= */
 
 function calculatePrintedLot(
@@ -750,7 +747,18 @@ function buildDataMatrixPayload(
   posture
 ) {
 
-  return `DM1|${sku}|${lot}|${posture}`;
+  const compactLot =
+    lot.replace(
+      '.',
+      ''
+    );
+
+
+  const compactPosture =
+    `${posture.slice(2, 4)}${posture.slice(5, 7)}${posture.slice(8, 10)}`;
+
+
+  return `D|${sku}|${compactLot}|${compactPosture}`;
 
 }
 
@@ -786,7 +794,16 @@ function createDataMatrix(
 
   hints.set(
     window.ZXing.EncodeHintType.DATA_MATRIX_SHAPE,
-    DATA_MATRIX_FORCE_SQUARE
+    window.ZXing.DataMatrixSymbolShapeHint.FORCE_RECTANGLE
+  );
+
+
+  hints.set(
+    window.ZXing.EncodeHintType.MIN_SIZE,
+    {
+      getWidth: () => 36,
+      getHeight: () => 12
+    }
   );
 
 
@@ -812,12 +829,12 @@ function createDataMatrix(
 
 
   canvas.width =
-    matrix.getWidth() +
+    matrix.getHeight() +
     quietZone * 2;
 
 
   canvas.height =
-    matrix.getHeight() +
+    matrix.getWidth() +
     quietZone * 2;
 
 
@@ -873,8 +890,8 @@ function createDataMatrix(
       ) {
 
         context.fillRect(
+          matrix.getHeight() - 1 - y + quietZone,
           x + quietZone,
-          y + quietZone,
           1,
           1
         );
