@@ -4,7 +4,7 @@
    VERSÃO
    ========================================================= */
 
-const APP_VERSION = '1.1.2';
+const APP_VERSION = '1.1.3';
 
 const FONT_STORAGE_KEY = 'configEtiqueta-v1.1';
 
@@ -822,6 +822,14 @@ function createDataMatrix(
     1;
 
 
+  const symbolPadding =
+    1;
+
+
+  const moduleSize =
+    5;
+
+
   const canvas =
     document.createElement(
       'canvas'
@@ -829,13 +837,19 @@ function createDataMatrix(
 
 
   canvas.width =
-    matrix.getWidth() +
-    quietZone * 2;
+    (
+      matrix.getWidth() +
+      symbolPadding * 2 +
+      quietZone * 2
+    ) * moduleSize;
 
 
   canvas.height =
-    matrix.getHeight() +
-    quietZone * 2;
+    (
+      matrix.getHeight() +
+      symbolPadding * 2 +
+      quietZone * 2
+    ) * moduleSize;
 
 
   canvas.setAttribute(
@@ -890,10 +904,18 @@ function createDataMatrix(
       ) {
 
         context.fillRect(
-          x + quietZone,
-          y + quietZone,
-          1,
-          1
+          (
+            x +
+            symbolPadding +
+            quietZone
+          ) * moduleSize,
+          (
+            y +
+            symbolPadding +
+            quietZone
+          ) * moduleSize,
+          moduleSize,
+          moduleSize
         );
 
       }

@@ -1631,7 +1631,7 @@ footer p {
 }
 
 /* =========================================================
-   V1.1.2 - DATA MATRIX RETANGULAR HORIZONTAL
+   V1.1.3 - DATA MATRIX RASTER 5 PX POR MODULO
    ========================================================= */
 
 .screen-label {
@@ -1674,16 +1674,16 @@ footer p {
 
 .screen-label .qr-code {
   order: 2;
-  width: 240px;
-  height: 89px;
-  flex: 0 0 89px;
+  width: 250px;
+  height: 100px;
+  flex: 0 0 100px;
 }
 
 .screen-label .qr-code canvas {
-  width: 240px !important;
-  height: auto !important;
-  max-width: 240px !important;
-  max-height: 89px !important;
+  width: 250px !important;
+  height: 100px !important;
+  max-width: 250px !important;
+  max-height: 100px !important;
   image-rendering: pixelated;
 }
 
@@ -1699,16 +1699,16 @@ footer p {
 
   .print-qr {
     order: 2 !important;
-    width: 23.75mm !important;
-    height: 8.75mm !important;
-    flex: 0 0 8.75mm !important;
+    width: 25mm !important;
+    height: 10mm !important;
+    flex: 0 0 10mm !important;
   }
 
   .print-qr canvas {
-    width: 23.75mm !important;
-    height: 8.75mm !important;
-    max-width: 23.75mm !important;
-    max-height: 8.75mm !important;
+    width: 25mm !important;
+    height: 10mm !important;
+    max-width: 25mm !important;
+    max-height: 10mm !important;
     image-rendering: pixelated;
   }
 
