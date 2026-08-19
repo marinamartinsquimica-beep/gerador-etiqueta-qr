@@ -1629,3 +1629,140 @@ footer p {
   }
 
 }
+
+/* =========================================================
+   V1.1.2 - DATA MATRIX RETANGULAR HORIZONTAL
+   ========================================================= */
+
+.screen-label {
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px;
+}
+
+.screen-label .label-data {
+  order: 1;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.screen-label .label-sku span,
+.screen-label .label-lot > span {
+  display: none;
+}
+
+.screen-label .label-sku strong,
+.screen-label .label-lot strong {
+  margin-top: 0;
+  text-align: center;
+}
+
+.screen-label .label-lot {
+  margin-top: 2px;
+}
+
+.screen-label .lot-value-two-lines {
+  justify-content: center;
+}
+
+.screen-label .lot-line2 {
+  display: none !important;
+}
+
+.screen-label .qr-code {
+  order: 2;
+  width: 240px;
+  height: 89px;
+  flex: 0 0 89px;
+}
+
+.screen-label .qr-code canvas {
+  width: 240px !important;
+  height: auto !important;
+  max-width: 240px !important;
+  max-height: 89px !important;
+  image-rendering: pixelated;
+}
+
+@media print {
+
+  .print-copy {
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 0 !important;
+    padding: 0.4mm !important;
+  }
+
+  .print-qr {
+    order: 2 !important;
+    width: 23.75mm !important;
+    height: 8.75mm !important;
+    flex: 0 0 8.75mm !important;
+  }
+
+  .print-qr canvas {
+    width: 23.75mm !important;
+    height: 8.75mm !important;
+    max-width: 23.75mm !important;
+    max-height: 8.75mm !important;
+    image-rendering: pixelated;
+  }
+
+  .print-copy .label-data {
+    order: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: center !important;
+  }
+
+  .print-copy .label-sku,
+  .print-copy .label-lot {
+    width: 100% !important;
+    margin: 0 !important;
+    text-align: center !important;
+  }
+
+  .print-copy .label-sku span,
+  .print-copy .label-lot > span {
+    display: none !important;
+  }
+
+  .print-copy .label-sku strong {
+    margin: 0 !important;
+    font-size: var(--sku-font-print) !important;
+    line-height: 0.92 !important;
+    text-align: center !important;
+  }
+
+  .print-copy .label-lot {
+    margin-top: 0.15mm !important;
+  }
+
+  .print-copy .lot-value-two-lines {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 !important;
+  }
+
+  .print-copy .lot-line1 {
+    font-size: var(--lot-value-font-print) !important;
+    line-height: 0.92 !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+  }
+
+  .print-copy .lot-line2 {
+    display: none !important;
+  }
+
+}

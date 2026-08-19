@@ -4,7 +4,7 @@
    VERSÃO
    ========================================================= */
 
-const APP_VERSION = '1.1.1';
+const APP_VERSION = '1.1.2';
 
 const FONT_STORAGE_KEY = 'configEtiqueta-v1.1';
 
@@ -819,7 +819,7 @@ function createDataMatrix(
 
 
   const quietZone =
-    2;
+    1;
 
 
   const canvas =
@@ -829,12 +829,12 @@ function createDataMatrix(
 
 
   canvas.width =
-    matrix.getHeight() +
+    matrix.getWidth() +
     quietZone * 2;
 
 
   canvas.height =
-    matrix.getWidth() +
+    matrix.getHeight() +
     quietZone * 2;
 
 
@@ -890,8 +890,8 @@ function createDataMatrix(
       ) {
 
         context.fillRect(
-          matrix.getHeight() - 1 - y + quietZone,
           x + quietZone,
+          y + quietZone,
           1,
           1
         );
@@ -1012,11 +1012,11 @@ function createPrintCopy(
 
 
   lotLine1Output.textContent =
-    printedLot.line1;
+    printedLot.full;
 
 
   lotLine2Output.textContent =
-    printedLot.line2;
+    '';
 
 
   createDataMatrix(
@@ -1216,11 +1216,11 @@ function updateLabel() {
 
 
   labelLotLine1.textContent =
-    printedLot.line1;
+    printedLot.full;
 
 
   labelLotLine2.textContent =
-    printedLot.line2;
+    '';
 
 
   payloadOutput.textContent =
