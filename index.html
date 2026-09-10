@@ -1,477 +1,290 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#102a43">
-
-  <title>GERADOR DE ETIQUETA DATA MATRIX</title>
-
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-  <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-
-<header class="topbar">
-  <div class="topbar-inner">
-    <h1>GERADOR DE ETIQUETA DATA MATRIX</h1>
-    <span>v<span id="app-version">1.1.3</span></span>
-  </div>
-</header>
-
-<main class="app-shell">
-
-  <!-- DADOS DO PALETE -->
-  <section class="form-card">
-
-    <h2>DADOS DO PALETE</h2>
-
-    <form id="label-form" novalidate>
-
-      <!-- SKU -->
-      <label for="sku">
-        SKU
-      </label>
-
-      <input
-        id="sku"
-        class="sku-input"
-        type="text"
-        autocomplete="off"
-        placeholder="Ex.: 5008"
-        required
-      >
-
-
-      <!-- LOTE -->
-      <label>
-        LOTE
-        <span>(digite apenas os números)</span>
-      </label>
-
-      <div class="lot-fields">
-
-        <input
-          id="lot-part-one"
-          type="text"
-          inputmode="numeric"
-          maxlength="2"
-          placeholder="17"
-          required
-        >
-
-        <strong>.</strong>
-
-        <input
-          id="lot-part-two"
-          type="text"
-          inputmode="numeric"
-          maxlength="2"
-          placeholder="13"
-          required
-        >
-
-      </div>
-
-      <p class="info-box">
-        Formato do Lote Completo:
-        <strong>LXX.XX.XX.XX.XX</strong>
-      </p>
-
-
-      <!-- DATA DE POSTURA -->
-      <label for="posture">
-        DATA DE POSTURA
-      </label>
-
-      <input
-        id="posture"
-        type="date"
-        required
-      >
-
-      <p class="info-box">
-        No Data Matrix será usado o formato:
-        <strong>AAAA-MM-DD</strong>
-      </p>
-
-
-      <!-- LOTE COMPLETO -->
-      <label>
-        LOTE COMPLETO
-        <span>(gerado automaticamente)</span>
-      </label>
-
-      <div class="computed">
-        <output id="complete-lot">—</output>
-      </div>
-
-
-      <!-- QUANTIDADE -->
-      <label for="quantity">
-        QUANTIDADE DE ETIQUETAS
-      </label>
-
-      <input
-        id="quantity"
-        class="quantity-input"
-        type="number"
-        inputmode="numeric"
-        min="1"
-        step="1"
-        value="3"
-        required
-      >
-
-      <p class="info-box quantity-info">
-        Digite a quantidade real de etiquetas.
-        Exemplo:
-        <strong>30 etiquetas = 10 fileiras de 3 etiquetas.</strong>
-      </p>
-
-
-      <p
-        id="form-error"
-        class="error"
-        role="alert"
-      ></p>
-
-
-      <!-- AJUSTES DA ETIQUETA -->
-      <details class="font-settings">
-
-        <summary>
-          <span>AJUSTES DA ETIQUETA</span>
-          <span class="settings-arrow">▼</span>
-        </summary>
-
-        <div class="settings-content">
-
-
-          <!-- SKU -->
-          <div class="font-control">
-
-            <span>SKU</span>
-
-            <div>
-
-              <button
-                type="button"
-                data-font="sku"
-                data-direction="-1"
-              >
-                −
-              </button>
-
-              <output id="sku-font-value">
-                11,0 pt
-              </output>
-
-              <button
-                type="button"
-                data-font="sku"
-                data-direction="1"
-              >
-                +
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <!-- TEXTO LOTE -->
-          <div class="font-control">
-
-            <span>LOTE:</span>
-
-            <div>
-
-              <button
-                type="button"
-                data-font="lotLabel"
-                data-direction="-1"
-              >
-                −
-              </button>
-
-              <output id="lot-label-font-value">
-                4,5 pt
-              </output>
-
-              <button
-                type="button"
-                data-font="lotLabel"
-                data-direction="1"
-              >
-                +
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <!-- VALOR DO LOTE -->
-          <div class="font-control">
-
-            <span>VALOR DO LOTE</span>
-
-            <div>
-
-              <button
-                type="button"
-                data-font="lotValue"
-                data-direction="-1"
-              >
-                −
-              </button>
-
-              <output id="lot-value-font-value">
-                6,2 pt
-              </output>
-
-              <button
-                type="button"
-                data-font="lotValue"
-                data-direction="1"
-              >
-                +
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <p
-            id="font-limit-message"
-            class="font-limit-message"
-          ></p>
-
-
-          <button
-            id="reset-fonts"
-            class="reset-fonts"
-            type="button"
-          >
-            RESTAURAR TAMANHOS PADRÃO
-          </button>
-
-        </div>
-
-      </details>
-
-
-      <!-- BOTÕES -->
-      <div class="actions">
-
-        <button
-          id="print-button"
-          class="primary"
-          type="button"
-        >
-          IMPRIMIR ETIQUETAS
-        </button>
-
-        <button
-          id="new-button"
-          class="secondary"
-          type="button"
-        >
-          NOVA ETIQUETA
-        </button>
-
-      </div>
-
-    </form>
-
-  </section>
-
-
-
-  <!-- PRÉ-VISUALIZAÇÃO -->
-  <section
-    id="preview-section"
-    class="preview-column"
-    hidden
-  >
-
-    <h2>
-      PRÉ-VISUALIZAÇÃO DA ETIQUETA
-      (33 × 21 mm)
-    </h2>
-
-
-    <div class="label-card">
-
-      <div class="screen-label">
-
-        <div
-          id="qr-code"
-          class="qr-code"
-        ></div>
-
-
-        <div class="label-data">
-
-          <p class="label-sku">
-
-            <span>SKU</span>
-
-            <strong id="label-sku"></strong>
-
-          </p>
-
-
-          <div class="label-lot">
-
-  <span>LOTE:</span>
-
-  <strong class="lot-value-two-lines">
-
-    <span
-      id="label-lot-line1"
-      class="lot-line1"
-    ></span>
-
-    <span
-      id="label-lot-line2"
-      class="lot-line2"
-    ></span>
-
-  </strong>
-
-</div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- INFORMAÇÕES DA IMPRESSÃO -->
-    <div class="printer-card">
-
-      <h3>
-        CONFIGURAÇÃO DA IMPRESSÃO
-      </h3>
-
-      <p>
-        <strong>Etiqueta:</strong>
-        33 × 21 mm
-      </p>
-
-      <p>
-        <strong>Impressão:</strong>
-        3 etiquetas por fileira
-      </p>
-
-      <p>
-        <strong>Impressora:</strong>
-        Zebra ZD220t
-      </p>
-
-      <p id="page-summary">
-        Informe a quantidade de etiquetas.
-      </p>
-
-    </div>
-
-
-    <!-- PAYLOAD -->
-    <div class="qr-data-card">
-
-      <h3>
-        DADOS DO DATA MATRIX
-        (PARA CONFERÊNCIA)
-      </h3>
-
-      <code id="payload"></code>
-
-    </div>
-
-  </section>
-
-</main>
-
-
-
-<!--
-  ÁREA EXCLUSIVA DE IMPRESSÃO
-
-  O JavaScript criará aqui
-  automaticamente quantas fileiras forem
-  necessárias.
-
-  Cada fileira:
-
-  33 mm
-  + 1,5 mm
-  + 33 mm
-  + 1,5 mm
-  + 33 mm
-
-  Total = 102 mm
--->
-
-<div
-  id="print-area"
-  aria-hidden="true"
-></div>
-
-
-
-<footer>
-
-  <p>
-    Use o botão
-    <strong>IMPRIMIR ETIQUETAS</strong>
-    ou
-    <strong>Ctrl + P</strong>.
-  </p>
-
-  <p>
-    Cada fileira contém até
-    <strong>3 etiquetas de 33 × 21 mm</strong>.
-  </p>
-
-  <p class="authorship">
-    Criado por:
-    <strong>Marina Martins Costa</strong>
-  </p>
-
-</footer>
-
-
-
-<!-- ATUALIZAÇÃO PWA -->
-<aside
-  id="update-banner"
-  class="update-banner"
-  hidden
->
-
-  <span>
-    Uma nova versão está disponível.
-  </span>
-
-  <button
-    id="update-button"
-    type="button"
-  >
-    ATUALIZAR AGORA
-  </button>
-
-</aside>
-
-
-
-<script src="vendor/zxing.min.js"></script>
-<script src="app.js"></script>
-
-</body>
-</html>
+:root {
+  color-scheme: light;
+
+  --navy: #102a43;
+  --blue: #1261a0;
+  --blue-light: #e9f4ff;
+  --green-light: #e5f5dc;
+
+  --ink: #17202a;
+  --line: #d7dee5;
+  --surface: #ffffff;
+  --background: #f4f7fa;
+
+  --sku-font-preview: 35.45px;
+  --sku-font-print: 15pt;
+
+  --lot-label-font-preview: 12.71px;
+  --lot-label-font-print: 5.2pt;
+
+  --lot-value-font-preview: 23.71px;
+  --lot-value-font-print: 10.5pt;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body { min-height: 100vh; color: var(--ink); font-family: Arial, Helvetica, sans-serif; background: var(--background); }
+button, input { font: inherit; }
+
+.topbar { color: #ffffff; background: var(--navy); }
+.topbar-inner { width: min(100% - 32px, 1180px); min-height: 74px; display: flex; align-items: center; justify-content: space-between; margin: 0 auto; }
+.topbar h1 { margin: 0; font-size: clamp(1.15rem, 3vw, 1.7rem); letter-spacing: .03em; }
+.topbar span { font-weight: 700; }
+.app-shell { width: min(100% - 32px, 1180px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, .9fr); gap: 24px; margin: 28px auto 40px; align-items: start; }
+.form-card, .preview-column, .printer-card, .qr-data-card { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: 0 8px 24px rgba(16,42,67,.08); }
+.form-card { padding: 26px; }
+.form-card h2, .preview-column h2 { margin: 0 0 22px; color: var(--navy); font-size: 1.12rem; letter-spacing: .04em; }
+#label-form { display: grid; gap: 10px; }
+label { margin-top: 8px; color: var(--navy); font-weight: 800; font-size: .86rem; letter-spacing: .025em; }
+label span { color: #687684; font-weight: 500; }
+input { width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #b9c5cf; border-radius: 10px; color: var(--ink); background: #fff; outline: none; transition: border-color .15s ease, box-shadow .15s ease; }
+input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(18,97,160,.13); }
+.lot-fields { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+.lot-fields strong { color: var(--navy); font-size: 1.25rem; }
+.info-box { margin: 0 0 4px; padding: 10px 12px; border-radius: 10px; color: #385066; background: var(--blue-light); font-size: .85rem; line-height: 1.45; }
+.computed { min-height: 46px; display: flex; align-items: center; padding: 10px 12px; border: 1px solid #c9d5df; border-radius: 10px; background: #f7fafc; }
+.computed output { font-weight: 800; color: var(--navy); }
+.error { min-height: 1.2em; margin: 2px 0 0; color: #b42318; font-weight: 700; }
+.font-settings { margin-top: 8px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; }
+.font-settings summary { min-height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; cursor: pointer; color: var(--navy); font-weight: 800; background: #f7fafc; }
+.settings-content { display: grid; gap: 12px; padding: 14px; border-top: 1px solid var(--line); }
+.font-control { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.font-control > span { color: #385066; font-weight: 700; font-size: .86rem; }
+.font-control > div { display: flex; align-items: center; gap: 8px; }
+.font-control button { width: 34px; height: 34px; border: 1px solid #b9c5cf; border-radius: 9px; background: #fff; color: var(--navy); font-weight: 900; cursor: pointer; }
+.font-control output { min-width: 72px; text-align: center; font-weight: 800; }
+.font-limit-message { margin: 0; color: #8a5a00; font-size: .82rem; }
+.reset-fonts { min-height: 40px; border: 1px solid #b9c5cf; border-radius: 9px; background: #fff; color: var(--navy); font-weight: 800; cursor: pointer; }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+.actions button { min-height: 48px; border-radius: 11px; border: 0; font-weight: 900; letter-spacing: .025em; cursor: pointer; }
+.actions .primary { color: #fff; background: var(--blue); }
+.actions .secondary { color: var(--navy); background: #e8eef3; }
+.preview-column { padding: 24px; }
+.label-card { display: flex; justify-content: center; padding: 20px; border: 1px dashed #aebdca; border-radius: 14px; background: #f7fafc; overflow: auto; }
+.screen-label { width: 330px; height: 210px; display: flex; align-items: center; gap: 10px; overflow: hidden; padding: 8px; color: #000; background: #fff; box-shadow: 0 5px 18px rgba(0,0,0,.14); }
+.qr-code { flex: 0 0 auto; display: grid; place-items: center; }
+.qr-code canvas, .qr-code img { display: block; image-rendering: pixelated; }
+.label-data { min-width: 0; flex: 1; }
+.label-sku { margin: 0 0 6px; line-height: 1; }
+.label-sku span { display: block; margin-bottom: 3px; font-size: 11px; font-weight: 700; }
+.label-sku strong { display: block; overflow: hidden; font-size: var(--sku-font-preview); line-height: .95; white-space: nowrap; text-overflow: clip; }
+.label-lot { display: flex; align-items: flex-start; gap: 5px; }
+.label-lot > span { flex: 0 0 auto; font-size: var(--lot-label-font-preview); font-weight: 800; line-height: 1.05; }
+.lot-value-two-lines { min-width: 0; display: flex; flex-direction: column; font-size: var(--lot-value-font-preview); line-height: .9; }
+.lot-value-two-lines span { display: block; white-space: nowrap; }
+.printer-card, .qr-data-card { margin-top: 16px; padding: 16px; box-shadow: none; }
+.printer-card h3, .qr-data-card h3 { margin: 0 0 10px; color: var(--navy); font-size: .9rem; letter-spacing: .035em; }
+.printer-card p { margin: 6px 0; color: #385066; font-size: .88rem; }
+.qr-data-card code { display: block; overflow-wrap: anywhere; padding: 10px; border-radius: 9px; background: #f1f5f8; color: #243b53; font-size: .8rem; }
+footer { padding: 22px 16px 28px; text-align: center; color: #5d6d7b; font-size: .83rem; }
+footer p { margin: 5px 0; }
+.authorship { margin-top: 12px; color: var(--navy); }
+.update-banner { position: fixed; right: 18px; bottom: 18px; z-index: 20; max-width: min(420px, calc(100vw - 36px)); display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; color: #fff; background: #173f5f; box-shadow: 0 12px 30px rgba(0,0,0,.22); }
+.update-banner[hidden] { display: none; }
+.update-banner button { min-height: 36px; padding: 0 12px; border: 0; border-radius: 8px; background: #fff; color: #173f5f; font-weight: 900; cursor: pointer; }
+#print-area { display: none; }
+
+@media (max-width: 860px) { .app-shell { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .topbar-inner { width: min(100% - 22px, 1180px); min-height: 64px; } .app-shell { width: min(100% - 22px, 1180px); margin-top: 18px; } .form-card, .preview-column { padding: 18px; border-radius: 13px; } .actions { grid-template-columns: 1fr; } }
+
+@media print {
+  @page { size: 102mm 21mm; margin: 0; }
+  html, body { width: 102mm; min-width: 102mm; margin: 0 !important; padding: 0 !important; background: #fff !important; }
+  body > :not(#print-area) { display: none !important; }
+  #print-area { display: block !important; width: 102mm; margin: 0 !important; padding: 0 !important; }
+  .print-row { width: 102mm; height: 21mm; display: grid; grid-template-columns: 33mm 1.5mm 33mm 1.5mm 33mm; break-after: page; page-break-after: always; overflow: hidden; }
+  .print-row:last-child { break-after: auto; page-break-after: auto; }
+  .print-slot { width: 33mm; height: 21mm; overflow: hidden; }
+  .print-gap { width: 1.5mm; height: 21mm; }
+  .print-label { width: 33mm; height: 21mm; display: flex; align-items: center; gap: .6mm; overflow: hidden; padding: .45mm; color: #000; background: #fff; }
+  .print-label .qr-code { flex: 0 0 auto; display: grid; place-items: center; }
+  .print-label .qr-code canvas, .print-label .qr-code img { display: block; image-rendering: pixelated; }
+  .print-label .label-data { min-width: 0; flex: 1; }
+  .print-label .label-sku { margin: 0 0 .35mm; line-height: 1; }
+  .print-label .label-sku span { display: block; margin-bottom: .15mm; font-size: 3.3pt; font-weight: 700; }
+  .print-label .label-sku strong { display: block; overflow: hidden; font-size: var(--sku-font-print); line-height: .9; white-space: nowrap; }
+  .print-label .label-lot { display: flex; align-items: flex-start; gap: .25mm; }
+  .print-label .label-lot > span { flex: 0 0 auto; font-size: var(--lot-label-font-print); font-weight: 800; line-height: 1; }
+  .print-label .lot-value-two-lines { min-width: 0; display: flex; flex-direction: column; font-size: var(--lot-value-font-print); line-height: .82; }
+  .print-label .lot-value-two-lines span { display: block; white-space: nowrap; }
+}
+
+/* =========================================================
+   LAYOUT RAIAR PARIPASSU — SOMENTE TELA
+   Mantém integralmente as regras de impressão acima.
+   ========================================================= */
+@media screen {
+  :root {
+    --navy: #254D69;
+    --blue: #254D69;
+    --blue-light: #eef8fb;
+    --ink: #254D69;
+    --line: #dce7ec;
+    --surface: #ffffff;
+    --background: #f4f8fa;
+  }
+
+  body {
+    color: #254D69;
+    background: linear-gradient(180deg, #f8fbfc 0%, #eef5f7 100%);
+  }
+
+  .topbar {
+    background: #254D69;
+    border-bottom: 4px solid #5CDCF2;
+    box-shadow: 0 5px 18px rgba(37,77,105,.18);
+  }
+
+  .topbar-inner {
+    min-height: 82px;
+  }
+
+  .topbar h1 {
+    font-weight: 800;
+    letter-spacing: .02em;
+  }
+
+  .topbar-inner > span {
+    padding: 7px 11px;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 999px;
+    background: rgba(255,255,255,.10);
+  }
+
+  .app-shell {
+    gap: 28px;
+    margin-top: 32px;
+  }
+
+  .form-card,
+  .preview-column,
+  .printer-card,
+  .qr-data-card {
+    border-color: #dce7ec;
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(37,77,105,.10);
+  }
+
+  .form-card,
+  .preview-column {
+    border-top: 5px solid #5CDCF2;
+  }
+
+  .form-card h2,
+  .preview-column h2 {
+    color: #254D69;
+    font-weight: 900;
+  }
+
+  label {
+    color: #254D69;
+  }
+
+  input {
+    border: 1px solid #cbdbe2;
+    border-radius: 12px;
+    background: #fbfdfe;
+  }
+
+  input:focus {
+    border-color: #5CDCF2;
+    box-shadow: 0 0 0 4px rgba(92,220,242,.18);
+  }
+
+  .info-box {
+    color: #355f78;
+    background: #eef9fb;
+    border-left: 4px solid #5CDCF2;
+  }
+
+  .computed {
+    border-color: #d5e3e9;
+    border-radius: 12px;
+    background: #f7fbfc;
+  }
+
+  .font-settings {
+    border-color: #dce7ec;
+    border-radius: 14px;
+  }
+
+  .font-settings summary {
+    color: #254D69;
+    background: #f2f8fa;
+  }
+
+  .font-control button,
+  .reset-fonts {
+    border-color: #cbdbe2;
+    border-radius: 10px;
+    color: #254D69;
+  }
+
+  .font-control button:hover,
+  .reset-fonts:hover {
+    border-color: #5CDCF2;
+    background: #eefbfc;
+  }
+
+  .actions button {
+    min-height: 50px;
+    border-radius: 999px;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+
+  .actions button:hover {
+    transform: translateY(-1px);
+  }
+
+  .actions .primary {
+    color: #254D69;
+    background: #5CDCF2;
+    box-shadow: 0 7px 18px rgba(92,220,242,.28);
+  }
+
+  .actions .secondary {
+    color: #254D69;
+    background: #FFA385;
+    box-shadow: 0 7px 18px rgba(255,163,133,.24);
+  }
+
+  .label-card {
+    border-color: #bcd5df;
+    border-radius: 16px;
+    background: #f3f9fb;
+  }
+
+  .printer-card h3,
+  .qr-data-card h3 {
+    color: #254D69;
+  }
+
+  .qr-data-card code {
+    color: #254D69;
+    background: #eef5f7;
+  }
+
+  footer {
+    margin-top: 18px;
+    padding: 26px 16px 30px;
+    color: rgba(255,255,255,.88);
+    background: #254D69;
+    border-top: 4px solid #FFA385;
+  }
+
+  footer .authorship,
+  footer strong {
+    color: #ffffff;
+  }
+
+  .update-banner {
+    background: #254D69;
+    border: 2px solid #5CDCF2;
+  }
+
+  .update-banner button {
+    color: #254D69;
+    background: #5CDCF2;
+    border-radius: 999px;
+  }
+}
