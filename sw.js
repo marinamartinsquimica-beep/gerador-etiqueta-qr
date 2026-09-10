@@ -1,11 +1,12 @@
 const CACHE_NAME =
-  'gerador-data-matrix-paletes-v1.1.4-layout-raiar';
+  'gerador-data-matrix-paletes-v1.1.4-layout-raiar-r2';
 
 
 const ASSETS = [
   './',
   './index.html',
   './styles.css',
+  './theme-raiar.css',
   './app.js',
   './manifest.webmanifest',
   './version.json',
