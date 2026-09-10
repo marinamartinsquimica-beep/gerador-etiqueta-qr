@@ -1,5 +1,5 @@
 const CACHE_NAME =
-  'gerador-data-matrix-paletes-v1.1.3-raster-5px';
+  'gerador-data-matrix-paletes-v1.1.4-layout-raiar';
 
 
 const ASSETS = [
@@ -118,7 +118,8 @@ self.addEventListener(
 
             if (
               !response ||
-              response.status !== 200
+              response.status !== 200 ||
+              response.type === 'opaque'
             ) {
 
               return response;
@@ -126,7 +127,7 @@ self.addEventListener(
             }
 
 
-            const responseCopy =
+            const responseClone =
               response.clone();
 
 
@@ -135,14 +136,11 @@ self.addEventListener(
                 CACHE_NAME
               )
               .then(
-                (cache) => {
-
+                (cache) =>
                   cache.put(
                     event.request,
-                    responseCopy
-                  );
-
-                }
+                    responseClone
+                  )
               );
 
 
@@ -150,7 +148,6 @@ self.addEventListener(
 
           }
         )
-
         .catch(
           () =>
             caches.match(
@@ -165,7 +162,7 @@ self.addEventListener(
 
 
 /* =========================================================
-   ATUALIZAÇÃO IMEDIATA
+   ATUALIZAÇÃO MANUAL
    ========================================================= */
 
 self.addEventListener(
