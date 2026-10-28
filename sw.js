@@ -1,5 +1,5 @@
 const CACHE_NAME =
-  'gerador-data-matrix-paletes-v1.1.4-layout-raiar-r2';
+  'gerador-data-matrix-paletes-v1.1.5-layout-raiar-r2';
 
 
 const ASSETS = [
@@ -7,7 +7,9 @@ const ASSETS = [
   './index.html',
   './styles.css',
   './theme-raiar.css',
-  './app.js',
+  './app.js?v=115',
+  './sku-cadastro.js?v=115',
+  './sku-cadastro.css?v=115',
   './manifest.webmanifest',
   './version.json',
   './vendor/zxing.min.js',
